@@ -523,7 +523,7 @@ def main():
                         step=current_step,
                         ))
                 if args.save_on_loss:
-                    if sav_los<(avg_loss[0]/avg_loss[1]):
+                    if sav_los>(avg_loss[0]/avg_loss[1]):
                         save()
                         sav_los=(avg_loss[0]/avg_loss[1])
 
