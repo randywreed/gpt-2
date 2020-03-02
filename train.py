@@ -119,8 +119,7 @@ parser.add_argument('--save_graph', default=False, action='store_true', help="Sa
 
 parser.add_argument('--checkpoint_path',metavar='CHECKPOINT_DIR', default='checkpoint',help="Path to save checkpoints" )
 PST = pytz.timezone('US/Pacific')
-CHECKPOINT_DIR=args.checkpoint_path
-print('checkpoint Dir=',CHECKPOINT_DIR)
+
 def timestamp(now=None, tz=None):
     if now is None:
         now = datetime.now(timezone.utc)
@@ -146,6 +145,8 @@ def randomize(context, hparams, p):
 
 def main():
     args = parser.parse_args()
+    CHECKPOINT_DIR=args.checkpoint_path
+    print('checkpoint Dir=',CHECKPOINT_DIR)
     enc = encoder.get_encoder(args.model_name)
     hparams = model.default_hparams()
     hparams.res_dropout = args.dropout
