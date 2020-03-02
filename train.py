@@ -26,7 +26,7 @@ import tflex_sgdr
 import pytz
 from datetime import datetime, timezone
 
-CHECKPOINT_DIR = 'checkpoint'
+#CHECKPOINT_DIR = 'checkpoint' #now passed as arg, default below
 SAMPLE_DIR = 'samples'
 
 
@@ -117,8 +117,10 @@ parser.add_argument('--seed', type=int, default=-1, help='Deterministic seed for
 
 parser.add_argument('--save_graph', default=False, action='store_true', help="Save TensorFlow graph to summary log (to see ops in tensorboard)")
 
+parser.add_argument('--checkpoint_path',metavar='CHECKPOINT_DIR', default='checkpoint',help="Path to save checkpoints" )
 PST = pytz.timezone('US/Pacific')
-
+CHECKPOINT_DIR=args.checkpoint_path
+print('checkpoint Dir=',CHECKPOINT_DIR)
 def timestamp(now=None, tz=None):
     if now is None:
         now = datetime.now(timezone.utc)
