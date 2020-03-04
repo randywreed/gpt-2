@@ -148,8 +148,8 @@ def main():
     args = parser.parse_args()
     CHECKPOINT_DIR=args.checkpoint_path
     if not os.path.isdir(CHECKPOINT_DIR):
+        print('checkpoint Dir=',CHECKPOINT_DIR)
     sav_los=100
-    print('checkpoint Dir=',CHECKPOINT_DIR)
     enc = encoder.get_encoder(args.model_name)
     hparams = model.default_hparams()
     hparams.res_dropout = args.dropout

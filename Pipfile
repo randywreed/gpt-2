@@ -7,6 +7,10 @@ verify_ssl = true
 
 [packages]
 fire = "*"
+argparse = "*"
+numpy = "*"
+tqdm = "*"
+tensorflow = "*"
 
 [requires]
 python_version = "3.7"
