@@ -62,7 +62,7 @@ parser.add_argument('--sample_num', metavar='N', type=int, default=1, help='Gene
 parser.add_argument('--save_every', metavar='N', type=int, default=-1, help='Write a checkpoint every N steps')
 parser.add_argument('--save_time', metavar='N', type=float, default=15.0, help='Write a checkpoint every N minutes')
 parser.add_argument('--max_to_keep', metavar='N', type=int, default=5, help='Only keep the last N checkpoints')
-parser.add_argument('--save_on_loss',default=False,action='store_true',help='Save Checkpoint when loss exceeds current minimum')
+parser.add_argument('--save_on_loss',metavar='N',type=int,default=10 help='Save Checkpoint when loss exceeds current minimum after this many runs')
 
 parser.add_argument('--val_dataset', metavar='PATH', type=str, default=None, help='Dataset for validation loss, defaults to --dataset.')
 parser.add_argument('--val_batch_size', metavar='SIZE', type=int, default=1, help='Batch size for validation.')
@@ -522,7 +522,7 @@ def main():
                         avg=avg_loss[0] / avg_loss[1],
                         step=current_step,
                         ))
-                if args.save_on_loss:
+                if current_step>=args.save_on_loss:
                     if sav_los>(avg_loss[0]/avg_loss[1]):
                         save()
                         sav_los=(avg_loss[0]/avg_loss[1])
