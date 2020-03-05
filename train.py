@@ -523,9 +523,11 @@ def main():
                         step=current_step,
                         ))
                 if current_step>=args.save_on_loss:
+                    print('current avg loss minimum={}'.format(sav_los))
                     if sav_los>(avg_loss[0]/avg_loss[1]):
                         save()
                         sav_los=(avg_loss[0]/avg_loss[1])
+                        print('new loss minimum='.format(sav_los))
 
                 counter += 1
                 current_step += 1

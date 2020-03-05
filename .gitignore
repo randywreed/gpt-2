@@ -5,3 +5,4 @@ checkpoint
 samples
 venv/
 pong.txt
+.vscode/settings.json
