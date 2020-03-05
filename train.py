@@ -379,11 +379,11 @@ def main():
             print(
                 'Saving',
                 os.path.join(CHECKPOINT_DIR, args.run_name,
-                             'model-{}').format(counter))
+                             'loss-{:.4f}model-{}').format(counter,sav_los))
             t0 = time.time()
             saver.save(
                 sess,
-                os.path.join(CHECKPOINT_DIR, args.run_name, 'model'),
+                os.path.join(CHECKPOINT_DIR, args.run_name, 'loss{:.4f}_model'.format(sav_los)),
                 global_step=counter)
             t1 = time.time()
             print('Saved in %f seconds' % (t1 - t0))
