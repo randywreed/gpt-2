@@ -379,7 +379,7 @@ def main():
             print(
                 'Saving',
                 os.path.join(CHECKPOINT_DIR, args.run_name,
-                             'loss-{:.4f}model-{}').format(counter,sav_los))
+                             'loss-{:.4f}model-{}').format(sav_los,counter))
             t0 = time.time()
             saver.save(
                 sess,
@@ -527,7 +527,7 @@ def main():
                     if sav_los>(avg_loss[0]/avg_loss[1]):
                         save()
                         sav_los=(avg_loss[0]/avg_loss[1])
-                        print('new loss minimum='.format(sav_los))
+                        print('new loss minimum={}'.format(sav_los))
 
                 counter += 1
                 current_step += 1
