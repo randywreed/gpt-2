@@ -33,6 +33,7 @@ def is_ascii(s):
 
 def interact_model(
     model_name='117M',
+    chkpoint_dir='models'
     restore_from=None,
     seed=None,
     nsamples=1,
@@ -49,6 +50,8 @@ def interact_model(
     """
     Interactively run the model
     :model_name=117M : String, which model to use
+    :chkpoint_dir: checkpoint directory
+    :restore_from=None: String for which checkpoint to use, must be in the models directory
     :seed=None : Integer seed for random number generators, fix seed to reproduce
      results
     :nsamples=1 : Number of samples to return total
@@ -98,7 +101,7 @@ def interact_model(
 
         saver = tflex.Saver(reshape=True)
         if restore_from is None:
-          restore_from = os.path.join('models', model_name)
+          restore_from = os.path.join(chkpoint_dir, model_name)
         ckpt = tflex.latest_checkpoint(restore_from)
         saver.restore(sess, ckpt)
 
