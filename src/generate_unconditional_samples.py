@@ -4,7 +4,7 @@ import os
 import sys
 sys.path += [os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'src')]
 sys.path += [os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))]
-
+import argparse
 import fire
 import json
 import numpy as np
@@ -12,18 +12,52 @@ import tensorflow as tf
 import tflex
 
 import model, sample, encoder
+parser=argparse.ArgumentParser(
+    description="Generate Text from GPT-2 from prompt",
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter
+)
+
+parser.add_argument('--model_name',metavar='MODEL',type=str,default='117M',help='Pretrained model name')
+parser.add_argument('--restore_from', type=str, default='latest', help='Either "latest", "fresh", or a path to a checkpoint file')
+parser.add_argument("--prompt", type=str, default="")
+parser.add_argument("--length", type=int, default=20)
+parser.add_argument("--stop_token", type=str, default=None, help="Token at which text generation is stopped")
+
+parser.add_argument(
+    "--temperature",
+    type=float,
+    default=1.0,
+    help="temperature of 1.0 has no effect, lower tend toward greedy sampling",
+)
+parser.add_argument(
+    "--repetition_penalty", type=float, default=1.0, help="primarily useful for CTRL model; in that case, use 1.2"
+)
+parser.add_argument("--k", type=int, default=0)
+parser.add_argument("--p", type=float, default=0.9)
+
+parser.add_argument("--padding_text", type=str, default="", help="Padding text for Transfo-XL and XLNet.")
+parser.add_argument("--xlm_language", type=str, default="", help="Optional language when used with the XLM model.")
+
+parser.add_argument("--seed", type=int, default=42, help="random seed for initialization")
+parser.add_argument("--no_cuda", action="store_true", help="Avoid using CUDA when available")
+parser.add_argument("--num_return_sequences", type=int, default=1, help="The number of samples to generate.")
+args = parser.parse_args()
+
+args.device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
+args.n_gpu = 0 if args.no_cuda else torch.cuda.device_count()
+
 
 def sample_model(
-    model_name='117M',
-    restore_from=None,
-    seed=None,
-    nsamples=0,
-    batch_size=1,
-    length=None,
-    temperature=1,
-    top_k=0,
-    top_p=0.0,
-    penalize=0
+    model_name=args.model_name,
+    restore_from=args.restore_from,
+    seed=args.seed,
+    nsamples=args.nsamples,
+    batch_size=args.batch_size,
+    length=args.length,
+    temperature=args.temperature,
+    top_k=args.top_k,
+    top_p=args.top_p,
+    penalize=args.penalize
 ):
     """
     Run the sample_model
