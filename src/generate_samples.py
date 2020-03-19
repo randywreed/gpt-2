@@ -48,6 +48,7 @@ parser.add_argument("--seed", type=int, default=42, help="random seed for initia
 parser.add_argument("--no_cuda", action="store_true", help="Avoid using CUDA when available")
 parser.add_argument("--num_return_sequences", type=int, default=1, help="The number of samples to generate.")
 parser.add_argument("--length",type=int,default=64,help='How many tokens use to deterime next word (max 1024)')
+parser.add_argument("--nsamples",type=int,default=1,help="Number of samples to generate")
 args = parser.parse_args()
 
 args.device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")

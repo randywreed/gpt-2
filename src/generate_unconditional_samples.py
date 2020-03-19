@@ -38,7 +38,7 @@ parser.add_argument("--p", type=float, default=0.9)
 
 parser.add_argument("--padding_text", type=str, default="", help="Padding text for Transfo-XL and XLNet.")
 parser.add_argument("--xlm_language", type=str, default="", help="Optional language when used with the XLM model.")
-
+parser.add_argument("--nsamples",type=int,default=1,help="Number of samples to generate")
 parser.add_argument("--seed", type=int, default=42, help="random seed for initialization")
 parser.add_argument("--no_cuda", action="store_true", help="Avoid using CUDA when available")
 parser.add_argument("--num_return_sequences", type=int, default=1, help="The number of samples to generate.")
