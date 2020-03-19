@@ -13,6 +13,45 @@ import tensorflow as tf
 import model, sample, encoder
 
 import tflex
+import argparse
+
+parser=argparse.ArgumentParser(
+    description="Generate Text from GPT-2 from prompt",
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter
+)
+
+parser.add_argument('--model_name',metavar='MODEL',type=str,default='117M',help='Pretrained model name')
+parser.add_argument('--model_dir',type=str,default="models",help='Directory to use for model. Should have a subdirectory of model_name')
+parser.add_argument('--restore_from', type=str, default='latest', help='Either "latest", "fresh", or a path to a checkpoint file')
+parser.add_argument("--prompt", type=str, default="")
+parser.add_argument("--stop_token", type=str, default=None, help="Token at which text generation is stopped")
+
+parser.add_argument(
+    "--temperature",
+    type=float,
+    default=1.0,
+    help="temperature of 1.0 has no effect, lower tend toward greedy sampling",
+)
+parser.add_argument(
+    "--repetition_penalty", type=float, default=1.0, help="Float value controlling 'used' penalty. Implements repetition \
+     reduction (similar to CTRL) if set to a value > 0."
+)
+parser.add_argument("--k", type=int, default=40, help='Integer value controlling diversity. 1 means only 1 word is considered for each step (token), resulting in deterministic completions, \
+     while 40 means 40 words are considered at each step. 0 (default) is a special setting meaning no restrictions. (default=40).')
+parser.add_argument("--p", type=float, default=0.9,help='Float value controlling diversity. Implements nucleus sampling, \
+     overriding top_k if set to a value > 0. (default=0.9)')
+
+parser.add_argument("--padding_text", type=str, default="", help="Padding text for Transfo-XL and XLNet.")
+parser.add_argument("--xlm_language", type=str, default="", help="Optional language when used with the XLM model.")
+parser.add_argument("--max_length",type=int,default=-1,help='Maximum length before context window is cleared (-1 default)')
+parser.add_argument("--seed", type=int, default=42, help="random seed for initialization")
+parser.add_argument("--no_cuda", action="store_true", help="Avoid using CUDA when available")
+parser.add_argument("--num_return_sequences", type=int, default=1, help="The number of samples to generate.")
+parser.add_argument("--length",type=int,default=64,help='How many tokens use to deterime next word (max 1024)')
+args = parser.parse_args()
+
+args.device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
+args.n_gpu = 0 if args.no_cuda else torch.cuda.device_count()
 
 @tflex.register_command
 def clear_context():
@@ -32,20 +71,20 @@ def is_ascii(s):
     return all(ord(c) < 128 for c in s)
 
 def interact_model(
-    model_name='117M',
-    chkpoint_dir='models'
-    restore_from=None,
-    seed=None,
-    nsamples=1,
+    model_name=args.model_name,
+    chkpoint_dir=args.model_dir,
+    restore_from=args.restore_from,
+    seed=args.seed,
+    nsamples=args.nsamples,
     step=1,
-    length=64,
-    prompt="\n",
+    length=args.length,
+    prompt=args.prompt,
     clear=None,
-    maxlen=-1,
-    temperature=1,
-    top_k=0,
-    top_p=0,
-    penalize=0
+    maxlen=args.max_length,
+    temperature=args.temperature,
+    top_k=args.k,
+    top_p=args.p,
+    penalize=args.penalize
 ):
     """
     Interactively run the model
@@ -80,7 +119,7 @@ def interact_model(
 
     enc = encoder.get_encoder(model_name)
     hparams = model.default_hparams()
-    with open(os.path.join('models', model_name, 'hparams.json')) as f:
+    with open(os.path.join(chkpoint_dir, model_name, 'hparams.json')) as f:
         hparams.override_from_dict(json.load(f))
 
     if length > hparams.n_ctx:

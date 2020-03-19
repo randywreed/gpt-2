@@ -18,6 +18,7 @@ parser=argparse.ArgumentParser(
 )
 
 parser.add_argument('--model_name',metavar='MODEL',type=str,default='117M',help='Pretrained model name')
+parser.add_argument('--model_dir',type=str,default="models",help='Directory to use for model. Should have a subdirectory of model_name')
 parser.add_argument('--restore_from', type=str, default='latest', help='Either "latest", "fresh", or a path to a checkpoint file')
 parser.add_argument("--prompt", type=str, default="")
 parser.add_argument("--length", type=int, default=20)
@@ -50,13 +51,14 @@ args.n_gpu = 0 if args.no_cuda else torch.cuda.device_count()
 def sample_model(
     model_name=args.model_name,
     restore_from=args.restore_from,
+    checkpoint_dir=args.model_dir,
     seed=args.seed,
     nsamples=args.nsamples,
     batch_size=args.batch_size,
     length=args.length,
     temperature=args.temperature,
-    top_k=args.top_k,
-    top_p=args.top_p,
+    top_k=args.k,
+    top_p=args.p,
     penalize=args.penalize
 ):
     """
@@ -85,7 +87,7 @@ def sample_model(
     """
     enc = encoder.get_encoder(model_name)
     hparams = model.default_hparams()
-    with open(os.path.join('models', model_name, 'hparams.json')) as f:
+    with open(os.path.join(chkpoint_dir, model_name, 'hparams.json')) as f:
         hparams.override_from_dict(json.load(f))
 
     if length is None:
