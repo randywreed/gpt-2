@@ -59,7 +59,7 @@ def sample_model(
     temperature=args.temperature,
     top_k=args.k,
     top_p=args.p,
-    penalize=args.penalize
+    penalize=args.repetition_penalty
 ):
     """
     Run the sample_model

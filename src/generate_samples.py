@@ -85,7 +85,7 @@ def interact_model(
     temperature=args.temperature,
     top_k=args.k,
     top_p=args.p,
-    penalize=args.penalize
+    penalize=args.repetition_penalty
 ):
     """
     Interactively run the model
