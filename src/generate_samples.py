@@ -11,7 +11,7 @@ import numpy as np
 import tensorflow as tf
 
 import model, sample, encoder
-
+import torch
 import tflex
 import argparse
 
