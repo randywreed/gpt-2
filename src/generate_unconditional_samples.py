@@ -10,6 +10,7 @@ import json
 import numpy as np
 import tensorflow as tf
 import tflex
+import torch
 
 import model, sample, encoder
 parser=argparse.ArgumentParser(
