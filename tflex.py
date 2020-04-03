@@ -471,6 +471,12 @@ def should_quit():
   return _quit
 
 @register_command
+def noquit():
+  global _quit
+  quit=False
+
+
+@register_command
 def save_and_quit():
   global _quit
   if has_command('save'):
