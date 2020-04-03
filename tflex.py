@@ -473,7 +473,7 @@ def should_quit():
 @register_command
 def noquit():
   global _quit
-  quit=False
+  _quit=False
 
 
 @register_command
