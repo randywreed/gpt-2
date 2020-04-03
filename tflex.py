@@ -462,7 +462,7 @@ def quit():
   global _quit
   if _quit:
     print("Failed to quit; running sys.exit(1)")
-    sys.exit(1)
+    return
   else:
     print("Quitting...")
     _quit = True
